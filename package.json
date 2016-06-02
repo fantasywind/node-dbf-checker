@@ -25,6 +25,7 @@
   "homepage": "https://github.com/fantasywind/node-dbf-checker",
   "dependencies": {
     "bluebird": "^3.4.0",
+    "chainable-validator": "^0.1.1",
     "iconv-lite": "^0.4.13",
     "stream-dbf": "^0.2.1"
   },

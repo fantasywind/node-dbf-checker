@@ -3,20 +3,22 @@ Check DBF field value format
 
 ## Usage
 
-```
-const Checker = require('node-dbf-checker');
+```javascript
+// ES6
+import Checker, {
+  Types as T,
+} from 'node-dbf-checker';
 
 const checker = new Checker('./path/to/dbf/file', {
-  encoding: 'big5' // default utf8
+  encoding: 'big5', // default utf8
 });
 
 checker.check({
-  NAME: Checker.Types.STRING(5).isRequired,
-  AGE: Checker.Types.INTEGER,
-  LATITUDE: Checker.Types.FLOAT,
+  NAME: T.string.len(5).isRequired,
+  AGE: T.number,
 }).then((records) => {
   // do something...
-}).catch((err) => {
+}).catch((errors) => {
   // error handler
 });
 ```

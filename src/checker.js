@@ -2,6 +2,26 @@ import StreamParser from 'stream-dbf';
 import iconv from 'iconv-lite';
 import Promise from 'bluebird';
 import { EventEmitter } from 'events';
+import ChainValidator, {
+  Types as T,
+} from 'chainable-validator';
+
+export const Types = T;
+
+function validate(formula, records, done) {
+  const validator = new ChainValidator(formula);
+  const errors = [];
+
+  validator.on('error', (e) => errors.push(e));
+
+  records.forEach((record) => validator.validate(record));
+
+  if (errors.length) {
+    throw errors;
+  } else {
+    done(records);
+  }
+}
 
 export class Checker extends EventEmitter {
   constructor(file, options = {
@@ -17,8 +37,9 @@ export class Checker extends EventEmitter {
     });
 
     this.readStream = parser.stream;
-
     this.encoding = options.encoding;
+    this.records = [];
+    this.isRead = false;
 
     this.readStream.on('data', (record) => {
       Object.keys(record).forEach((key) => {
@@ -26,20 +47,37 @@ export class Checker extends EventEmitter {
           record[key] = iconv.decode(record[key], this.encoding);
         }
       });
+
+      this.records.push(record);
     });
 
     this.readStream.on('end', () => {
-      this.emit('fileRead');
+      this.emit('fileRead', this.records);
+      this.isRead = true;
     });
   }
 
   check(formula = {}) {
-    return new Promise((resolve) => {
-      console.log('Formula', formula);
-
-      resolve();
+    return new Promise((resolve, reject) => {
+      if (this.isRead) {
+        try {
+          validate(formula, this.records, resolve);
+        } catch (e) {
+          reject(e);
+        }
+      } else {
+        this.once('fileRead', (records) => {
+          try {
+            validate(formula, records, resolve);
+          } catch (e) {
+            reject(e);
+          }
+        });
+      }
     });
   }
 }
+
+Checker.Types = T;
 
 export default Checker;
