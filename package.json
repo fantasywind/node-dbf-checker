@@ -1,0 +1,32 @@
+{
+  "name": "node-dbf-checker",
+  "version": "0.1.0",
+  "description": "Check DBF field value format",
+  "main": "lib/checker.js",
+  "scripts": {
+    "compile": "babel -d lib/ src/",
+    "prepublish": "npm run compile"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/fantasywind/node-dbf-checker.git"
+  },
+  "keywords": [
+    "dbf",
+    "validation",
+    "checker",
+    "stream"
+  ],
+  "author": "Chia Yu Pai",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/fantasywind/node-dbf-checker/issues"
+  },
+  "homepage": "https://github.com/fantasywind/node-dbf-checker",
+  "dependencies": {
+    "babel-preset-es2015": "^6.9.0",
+    "bluebird": "^3.4.0",
+    "iconv-lite": "^0.4.13",
+    "stream-dbf": "^0.2.1"
+  }
+}
