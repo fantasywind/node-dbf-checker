@@ -9,7 +9,9 @@ import ChainValidator, {
 export const Types = T;
 
 function validate(formula, records, done) {
-  const validator = new ChainValidator(formula);
+  const validator = new ChainValidator(formula, {
+    log: false,
+  });
   const errors = [];
 
   validator.on('error', (e) => errors.push(e));
@@ -62,15 +64,21 @@ export class Checker extends EventEmitter {
       if (this.isRead) {
         try {
           validate(formula, this.records, resolve);
-        } catch (e) {
-          reject(e);
+        } catch (errRefs) {
+          const err = new Error('Validate Failed.');
+          err.refs = errRefs;
+
+          reject(err);
         }
       } else {
         this.once('fileRead', (records) => {
           try {
             validate(formula, records, resolve);
-          } catch (e) {
-            reject(e);
+          } catch (errRefs) {
+            const err = new Error('Validate Failed.');
+            err.refs = errRefs;
+
+            reject(err);
           }
         });
       }

@@ -1,6 +1,6 @@
 {
   "name": "node-dbf-checker",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "Check DBF field value format",
   "main": "lib/checker.js",
   "scripts": {
